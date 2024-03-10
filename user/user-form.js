@@ -4,11 +4,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState, useContext, useEffect } from 'react';
 import * as Progress from 'react-native-progress';
 import  {Formik}  from 'formik';
+import axios from 'axios';
 import styles from '../styles';
 import {Context as AuthContext} from '../context/authContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { signin } from '../context/authActions';
 import * as ImagePicker from 'expo-image-picker'
+
+axios.defaults.baseURL = "http://192.168.2.12:8080/api/v1"
+
 const ButtonForm = (props) => {
     const { onPress, title = 'Save' } = props;
     return (
@@ -17,7 +21,6 @@ const ButtonForm = (props) => {
       </Pressable>
     );
 }
-
 
 
 const UserForm = ({navigation}) => {
@@ -47,6 +50,22 @@ const UserForm = ({navigation}) => {
                 setProgression(1 + getProgression)
             }
             else{
+              axios.post('/users', {
+                firstname: values.firstname,
+                email: "test@gmaill",
+                city: values.city,
+                gender: values.gender,
+                school: values.school,
+                education: values.education,
+                dateOfBirth: getDateString(values.dateOfBirth),
+                bio: values.bio
+              })
+              .then(function (response) {
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
               console.log(values)
               dispatch(signin(values))
               // signin({email: values.firstname, password: values.school});
@@ -241,6 +260,20 @@ const UserFormImage = (props) => {
     </View>
   );
 };
+
+function getDateString(date){
+  let month = date.getMonth()
+  let day = date.getDay()
+  if(date.getMonth() < 10){
+    month = "0" + date.getMonth()
+  }
+  if(date.getDay() < 10){
+    day = "0" + date.getDay()
+  }
+  let dateString = date.getFullYear() + "-" + month + "-" + day
+  console.log(dateString)
+  return dateString
+}
 
 
 

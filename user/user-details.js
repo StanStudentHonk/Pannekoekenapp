@@ -4,7 +4,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import {Context as AuthContext} from '../context/authContext';
 import { useSelector, useDispatch } from 'react-redux';
 
+
+
 const UserDetails = () => {
+
   const state  = useSelector(state => state);
   console.log(state)
   return (
